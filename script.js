@@ -1,3 +1,31 @@
+let pScore = 0;
+let cScore = 0;
+
+
+function displayResult(winner){
+    let score = document.querySelector(".score");
+    score.textContent = "Score: "+ pScore+ " "+ cScore;
+
+    const container = document.querySelector("body")
+    const div = document.createElement("h3");
+    const oldResult = container.querySelector("h3");
+    if (oldResult) oldResult.remove();
+    if (winner == "Player"){
+        div.textContent = "Yay! You won!"
+    }
+    else if (winner == "Computer"){
+        div.textContent = "EVEN A COMPUTER WON FROM YOU!"
+    }
+    else{
+        div.textContent = "Bum. It's a tie!"
+    }
+    container.appendChild(div);
+
+}
+
+
+
+
 function getComputerChoice() {
     const intChoice = Math.random();
     if (intChoice <= 0.333) {
@@ -10,7 +38,6 @@ function getComputerChoice() {
 }
 
 function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
     computerSelection = computerSelection.toLowerCase();
 
     if (playerSelection === computerSelection) {
@@ -20,45 +47,33 @@ function playRound(playerSelection, computerSelection) {
         (playerSelection === "paper" && computerSelection === "rock") ||
         (playerSelection === "scissor" && computerSelection === "paper")
     ) {
+        pScore++;
         return "Player";
     } else {
+        cScore++;
         return "Computer";
     }
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-
-    for (let i = 1; i <= 5; i++) {
-        const playerChoice = prompt(`Round ${i}: Enter Rock, Paper, or Scissor:`); 
-        const computerChoice = getComputerChoice();
-
-        const winner = playRound(playerChoice, computerChoice);
-
-        console.log(`Round ${i}: You chose ${playerChoice}, Computer chose ${computerChoice}.`);
-
-        if (winner === "Player") {
-            playerScore++;
-            console.log("You win this round!");
-        } else if (winner === "Computer") {
-            computerScore++;
-            console.log("Computer wins this round!");
-        } else {
-            console.log("It's a draw.");
+const buttons = document.querySelector(".buttons")
+buttons.addEventListener("click", (e) => {
+    player = null;
+    if (e.target.classList.contains("rock")){
+        player = "rock";
+    }
+    else if (e.target.classList.contains("paper")){
+        player = "paper";
+    }
+    else  {
+        player = "scissor";
+    }
+    if (player){
+        computer = getComputerChoice();
+        const winner = playRound(player, computer);
+        displayResult(winner);
         }
-    }
+    
+});
 
-    console.log("\nFinal Score:");
-    console.log(`Player: ${playerScore}, Computer: ${computerScore}`);
 
-    if (playerScore > computerScore) {
-        console.log("🎉 You win the game!");
-    } else if (computerScore > playerScore) {
-        console.log("💻 Computer wins the game!");
-    } else {
-        console.log("🤝 It's a tie!");
-    }
-}
 
-game();
